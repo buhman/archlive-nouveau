@@ -24,7 +24,7 @@ fi
 for arch in "${archs[@]}"
 do
 	if [ "${arch}" == 'x86_64' ]; then
-		cmd="makepkg ${asroot}"
+		cmd="makepkg --noconfirm -i -s ${asroot}"
 	elif [ "${arch}" == 'i686' ]; then
 		cmd="extra-i686-build -r ${i686chroot}"
 	else

@@ -1,0 +1,33 @@
+version: 2
+jobs:
+  build:
+    working_directory: /build
+    docker:
+      - image: base/archlinux:2018.06.01
+    steps:
+      - checkout
+      - run:
+          name: prepare
+          command: |
+            # this seems unnecessary
+            useradd -m -r -G wheel build
+            chown -hR build:build .
+
+            pacman --noconfirm -Syu base-devel bc
+
+            cat <<EOF> /etc/sudoers.d/wheel
+            %wheel ALL=(ALL) NOPASSWD: ALL
+            EOF
+
+      - run:
+          name: aur dependencies
+          command: |
+            curl -L https://aur.archlinux.org/cgit/aur.git/snapshot/waffle.tar.gz | tar xz
+            chown -hR build:build waffle
+            cd waffle
+            su build -c 'makepkg --noconfirm -si'
+
+      - run:
+          name: build
+          command: |
+            ./build.sh build

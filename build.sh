@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 archs=('x86_64')
 
 user="${1}"
